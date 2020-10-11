@@ -1,9 +1,10 @@
-Your team (name of each individual participating):
-How many JUnits were you able to get to pass? 
+Your team (name of each individual participating): Himamsu Siriseni, Akhil Gajera
+How many JUnits were you able to get to pass? 4
 
 Document and describe any enhancements included to help the judges properly grade your submission.
-	Step 1:
+	Step 1: 
 	Step 2: 
 	
 	
 Feedback for the coding competition?  Things you would like to see in future events?
+Possibly more time as I couldn't get the parsing down exactly for the dependents in the .csv file.
