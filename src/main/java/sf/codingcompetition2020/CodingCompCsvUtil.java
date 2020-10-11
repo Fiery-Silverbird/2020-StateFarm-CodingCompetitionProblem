@@ -1,11 +1,9 @@
 package sf.codingcompetition2020;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -16,21 +14,45 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
-import sf.codingcompetition2020.structures.Agent;
-import sf.codingcompetition2020.structures.Claim;
-import sf.codingcompetition2020.structures.Customer;
-import sf.codingcompetition2020.structures.Vendor;
+import sf.codingcompetition2020.structures.*;
 
 public class CodingCompCsvUtil {
-	
-	/* #1 
+
+	/* #1
 	 * readCsvFile() -- Read in a CSV File and return a list of entries in that file.
 	 * @param filePath -- Path to file being read in.
 	 * @param classType -- Class of entries being read in.
 	 * @return -- List of entries being returned.
 	 */
 	public <T> List<T> readCsvFile(String filePath, Class<T> classType) {
-
+		Scanner reader = new Scanner(filePath);
+		LinkedList<T> ret = new LinkedList<>();
+		reader.nextLine();
+		if(filePath.toUpperCase().contains("AGENT")) {
+			while(reader.hasNextLine()) {
+				String[] insert = reader.nextLine().split(",");
+				ret.add((T) new Agent(Integer.parseInt(insert[0]), insert[1], insert[2], insert[3], insert[4]));
+			}
+		}
+		else if(filePath.toUpperCase().contains("CLAIM")) {
+			while(reader.hasNextLine()) {
+				String[] insert = reader.nextLine().split(",");
+				ret.add((T) new Claim(Integer.parseInt(insert[0]), Integer.parseInt(insert[1]), Boolean.parseBoolean(insert[2]), Integer.parseInt(insert[3])));
+			}
+		}
+		else if(filePath.toUpperCase().contains("CUSTOMER")) {
+			/*while(reader.hasNextLine()) {
+				String[] insert = reader.nextLine().split(", ");
+				ret.add((T) new Customer(Integer.parseInt(insert[0], insert[1], insert[2], Integer.parseInt(insert[3]), insert[4], Integer.parseInt(insert[5]), Short.parseShort(insert[6]), insert[7],
+			}*/
+		}
+		else if(filePath.toUpperCase().contains("VENDOR")) {
+			while(reader.hasNextLine()) {
+				String[] insert = reader.nextLine().split(",");
+				ret.add((T) new Vendor(Integer.parseInt(insert[0]), insert[1], Integer.parseInt(insert[2]), Boolean.parseBoolean(insert[3])));
+			}
+		}
+		return ret;
 	}
 
 	
@@ -41,7 +63,7 @@ public class CodingCompCsvUtil {
 	 * @return -- The number of agents in a given area
 	 */
 	public int getAgentCountInArea(String filePath,String area) {
-
+		return 0;
 	}
 
 	
@@ -53,7 +75,7 @@ public class CodingCompCsvUtil {
 	 * @return -- The number of agents in a given area
 	 */
 	public List<Agent> getAgentsInAreaThatSpeakLanguage(String filePath, String area, String language) {
-
+		return null;
 	}
 	
 	
@@ -66,7 +88,7 @@ public class CodingCompCsvUtil {
 	 * @return -- The number of customers that use a certain agent in a given area.
 	 */
 	public short countCustomersFromAreaThatUseAgent(Map<String,String> csvFilePaths, String customerArea, String agentFirstName, String agentLastName) {
-		
+		return 0;
 	}
 
 	
@@ -77,7 +99,7 @@ public class CodingCompCsvUtil {
 	 * @return -- List of customers retained for a given number of years, in ascending order of policy cost.
 	 */
 	public List<Customer> getCustomersRetainedForYearsByPlcyCostAsc(String customerFilePath, short yearsOfService) {
-
+		return null;
 	}
 
 	
@@ -88,7 +110,7 @@ public class CodingCompCsvUtil {
 	 * @return -- List of customers who’ve made an inquiry for a policy but have not signed up.
 	 */
 	public List<Customer> getLeadsForInsurance(String filePath) {
-
+		return null;
 	}
 
 
@@ -103,7 +125,7 @@ public class CodingCompCsvUtil {
 	 * @return -- List of vendors within a given area, filtered by scope and vendor rating.
 	 */
 	public List<Vendor> getVendorsWithGivenRatingThatAreInScope(String filePath, String area, boolean inScope, int vendorRating) {
-
+		return null;
 	}
 
 
@@ -117,7 +139,7 @@ public class CodingCompCsvUtil {
 	 * @return -- List of customers filtered by age, number of vehicles insured and the number of dependents.
 	 */
 	public List<Customer> getUndisclosedDrivers(String filePath, int vehiclesInsured, int dependents) {
-
+		return null;
 	}	
 
 
@@ -130,7 +152,7 @@ public class CodingCompCsvUtil {
 	 * @return -- Agent ID of agent with the given rank.
 	 */
 	public int getAgentIdGivenRank(String filePath, int agentRank) {
-			
+		return 0;
 	}	
 
 	
@@ -141,7 +163,7 @@ public class CodingCompCsvUtil {
 	 * @return -- List of customers who’ve filed a claim within the last <numberOfMonths>.
 	 */
 	public List<Customer> getCustomersWithClaims(Map<String,String> csvFilePaths, short monthsOpen) {
-
+		return null;
 	}	
 
 }
