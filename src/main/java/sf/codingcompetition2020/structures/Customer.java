@@ -42,6 +42,10 @@ public class Customer {
 		this.vehiclesInsured = vehiclesInsured;
 	}
 
+	public Customer() {
+
+	}
+
 	public int getCustomerId() {
 		return customerId;
 	}

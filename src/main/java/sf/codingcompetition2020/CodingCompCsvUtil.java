@@ -1,8 +1,7 @@
 package sf.codingcompetition2020;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,30 +24,45 @@ public class CodingCompCsvUtil {
 	 * @return -- List of entries being returned.
 	 */
 	public <T> List<T> readCsvFile(String filePath, Class<T> classType) {
-		Scanner reader = new Scanner(filePath);
+		String[] reader = new String[0];
+		try {
+			reader = Files.readAllLines(new File(filePath).toPath()).toArray(new String[0]);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		LinkedList<T> ret = new LinkedList<>();
-		reader.nextLine();
 		if(filePath.toUpperCase().contains("AGENT")) {
-			while(reader.hasNextLine()) {
-				String[] insert = reader.nextLine().split(",");
+			for(int i = 1; i < reader.length; i++) {
+				String[] insert = reader[i].split(",");
 				ret.add((T) new Agent(Integer.parseInt(insert[0]), insert[1], insert[2], insert[3], insert[4]));
 			}
 		}
 		else if(filePath.toUpperCase().contains("CLAIM")) {
-			while(reader.hasNextLine()) {
-				String[] insert = reader.nextLine().split(",");
+			for(int i = 1; i < reader.length; i++) {
+				String[] insert = reader[i].split(",");
 				ret.add((T) new Claim(Integer.parseInt(insert[0]), Integer.parseInt(insert[1]), Boolean.parseBoolean(insert[2]), Integer.parseInt(insert[3])));
 			}
 		}
 		else if(filePath.toUpperCase().contains("CUSTOMER")) {
-			/*while(reader.hasNextLine()) {
-				String[] insert = reader.nextLine().split(", ");
-				ret.add((T) new Customer(Integer.parseInt(insert[0], insert[1], insert[2], Integer.parseInt(insert[3]), insert[4], Integer.parseInt(insert[5]), Short.parseShort(insert[6]), insert[7],
-			}*/
+			for(int i = 1; i < reader.length; i++) {
+				String[] insert = reader[i].split(",");
+				Customer add = new Customer();
+				add.setCustomerId(Integer.parseInt(insert[0]));
+				add.setFirstName(insert[1]);
+				add.setLastName(insert[2]);
+				add.setAge(Integer.parseInt(insert[3]));
+				add.setArea(insert[4]);
+				add.setAgentId(Integer.parseInt(insert[5]));
+				add.setAgentRating(Short.parseShort(insert[6]));
+				add.setPrimaryLanguage(insert[7]);
+				/*LinkedList<Dependent> put = new LinkedList<>();
+				String[] dependents = reader[i].split(", ");*/
+				ret.add((T) add);
+			}
 		}
 		else if(filePath.toUpperCase().contains("VENDOR")) {
-			while(reader.hasNextLine()) {
-				String[] insert = reader.nextLine().split(",");
+			for(int i = 1; i < reader.length; i++) {
+				String[] insert = reader[i].split(",");
 				ret.add((T) new Vendor(Integer.parseInt(insert[0]), insert[1], Integer.parseInt(insert[2]), Boolean.parseBoolean(insert[3])));
 			}
 		}
@@ -62,8 +76,15 @@ public class CodingCompCsvUtil {
 	 * @param area -- The area from which the agents should be counted.
 	 * @return -- The number of agents in a given area
 	 */
-	public int getAgentCountInArea(String filePath,String area) {
-		return 0;
+	public int getAgentCountInArea(String filePath, String area) {
+		LinkedList<Agent> counter = (LinkedList<Agent>) readCsvFile(filePath, Agent.class);
+		int ret = 0;
+		for(int i = 0; i < counter.size(); i++) {
+			if(counter.get(i).getArea().equals(area)) {
+				ret++;
+			}
+		}
+		return ret;
 	}
 
 	
@@ -75,7 +96,14 @@ public class CodingCompCsvUtil {
 	 * @return -- The number of agents in a given area
 	 */
 	public List<Agent> getAgentsInAreaThatSpeakLanguage(String filePath, String area, String language) {
-		return null;
+		LinkedList<Agent> matcher = (LinkedList<Agent>) readCsvFile(filePath, Agent.class);
+		LinkedList<Agent> ret = new LinkedList<>();
+		for(int i = 0; i < matcher.size(); i++) {
+			if(matcher.get(i).getArea().equals(area) && matcher.get(i).getLanguage().equals(language)) {
+				ret.add(matcher.get(i));
+			}
+		}
+		return ret;
 	}
 	
 	
@@ -88,7 +116,20 @@ public class CodingCompCsvUtil {
 	 * @return -- The number of customers that use a certain agent in a given area.
 	 */
 	public short countCustomersFromAreaThatUseAgent(Map<String,String> csvFilePaths, String customerArea, String agentFirstName, String agentLastName) {
-		return 0;
+		LinkedList<Agent> agents = (LinkedList<Agent>) readCsvFile(csvFilePaths.get("agentList"), Agent.class);
+		LinkedList<Customer> customers = (LinkedList<Customer>) readCsvFile(csvFilePaths.get("customerList"), Customer.class);
+		short ret = 0;
+		for(int i = 0; i < customers.size(); i++) {
+			if(customers.get(i).getArea().equals(customerArea)) {
+				for(int j = 0; j < agents.size(); j++) {
+					Agent comparator = agents.get(j);
+					if(comparator.getFirstName().equals(agentFirstName) && comparator.getLastName().equals(agentLastName) && comparator.getAgentId() == customers.get(i).getAgentId()) {
+						ret++;
+					}
+				}
+			}
+		}
+		return ret;
 	}
 
 	
@@ -99,6 +140,7 @@ public class CodingCompCsvUtil {
 	 * @return -- List of customers retained for a given number of years, in ascending order of policy cost.
 	 */
 	public List<Customer> getCustomersRetainedForYearsByPlcyCostAsc(String customerFilePath, short yearsOfService) {
+		LinkedList<Customer> match = (LinkedList<Customer>) readCsvFile(customerFilePath, Customer.class);
 		return null;
 	}
 
@@ -110,7 +152,15 @@ public class CodingCompCsvUtil {
 	 * @return -- List of customers who’ve made an inquiry for a policy but have not signed up.
 	 */
 	public List<Customer> getLeadsForInsurance(String filePath) {
-		return null;
+		LinkedList<Customer> match = (LinkedList<Customer>) readCsvFile(filePath, Customer.class);
+		LinkedList<Customer> ret = new LinkedList<>();
+		for(int i = 0; i < match.size(); i++) {
+			Customer temp = match.get(i);
+			if(!temp.isAutoPolicy() && !temp.isHomePolicy() && !temp.isRentersPolicy()) {
+				ret.add(temp);
+			}
+		}
+		return ret;
 	}
 
 

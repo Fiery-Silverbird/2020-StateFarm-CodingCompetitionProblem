@@ -3,6 +3,7 @@ package sf.codingcompetition2020;
 import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class CodingCompCsvUtilTest{
 	
 	//#1
 	@Test
-	public void test1() throws NoSuchFieldException {
+	public void test1() {
 		assertEquals("Giacopo",((Agent)codingCompCsVUtil.readCsvFile(agentFilePath, Agent.class).get(1)).getFirstName());
 		assertEquals(424, ((Claim)codingCompCsVUtil.readCsvFile(claimFilePath, Claim.class).get(423)).getClaimId());
 		assertEquals("Lorin", ((Customer)codingCompCsVUtil.readCsvFile(customerFilePath, Customer.class).get(499)).getFirstName());
